@@ -1,0 +1,37 @@
+version: 2
+
+workflows:
+    version: 2
+    build-and-test-for-linux:
+        jobs:
+            - build-and-test
+jobs:
+    build-and-test:
+        docker:
+            - image: "gcc:8.2"
+        steps: 
+            - checkout
+
+            # Prepare container
+            - run:
+                name: Install Sudo
+                command: 'apt-get update && apt-get install -y sudo'
+            - run:
+                name: Install Main Dev Dependencies
+                command: 'apt-get update && sudo apt-get install -y gcc g++ git python3 python3-pip'
+            - run:
+                name: Install Latest CMake
+                command: 'sudo python3 -m pip install cmake'
+
+            # Build
+            - run:
+                name: Creating Build Files
+                command: 'cmake -H. -Bbuild'
+            - run:
+                name: Creating Binary Files
+                command: 'cmake --build build'
+
+            # Test
+            - run:
+                name: Testing
+                command: 'cd build; ctest'
