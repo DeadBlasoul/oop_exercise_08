@@ -1,1 +1,0 @@
-/* This file keeps library project from lack of source code files */
