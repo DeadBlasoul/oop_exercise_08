@@ -35,7 +35,7 @@ struct unique_file_writer final
 
     unique_file_writer()
         : rng_(std::random_device{}())
-        , dist_(0, sizeof g_chars - 1)
+        , dist_(0, sizeof g_chars - 2)
     {}
 
     void new_unique_file() {
