@@ -126,6 +126,11 @@ int main(const int argc, char* argv[]) {
     std::string command;
     while(std::cin >> command) {
         if (command == "e" || command == "exit") {
+            if (count != 0) {
+                std::cout << "You can't exit till have uncommitted figures.\n"
+                             "Type `force' to commit immediately." << std::endl;
+                continue;
+            }
             break;
         }
 
@@ -140,6 +145,9 @@ int main(const int argc, char* argv[]) {
         }
         else if (command == "hexagon") {
             fig.reset(new hexagon{ std::cin });
+        }
+        else if (command == "force") {
+            // Skip if statements
         }
         else {
             std::cout << "Unknown figure type or command." << std::endl;
