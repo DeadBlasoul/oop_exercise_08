@@ -35,7 +35,8 @@ struct unique_file_writer final
 
     unique_file_writer()
         : rng_(std::random_device{}())
-        , dist_(0, sizeof g_chars - 2) {
+        , dist_(0, sizeof g_chars - 2)
+        , unique_(unique_string_len, '\0') {
         const auto generator = [&]() {
             return g_chars[dist_(rng_)];
         };
@@ -51,6 +52,10 @@ struct unique_file_writer final
         file_.open(name, std::ios_base::out);
 
         ++file_counter_;
+    }
+
+    [[nodiscard]] std::string_view get_unique() const {
+        return unique_;
     }
 
 private:
@@ -113,6 +118,8 @@ int main(const int argc, char* argv[]) {
     unique_file_writer fw;
     size_t             count = 0;
 
+    std::cout << "Unique name: " << fw.get_unique() << std::endl;
+
     publisher.subscribe(&sw);
     publisher.subscribe(&fw);
 
@@ -151,18 +158,19 @@ int main(const int argc, char* argv[]) {
 }
 
 size_t parse_limit(const int argc, char* argv[]) {
+    auto constexpr error_occured = 0;
+
     if (argc == 1) {
         return default_limit;
     }
     if (argc > 2) {
-        // Error statement
-        return 0;
+        return error_occured;
     }
 
     char* end;
     auto const lim = std::strtoull(argv[1], &end, 10);
     if (end == nullptr) {
-        return 0;
+        return error_occured;
     }
 
     return lim;
