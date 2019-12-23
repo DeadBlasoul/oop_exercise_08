@@ -1,0 +1,155 @@
+\documentclass[12pt]{article}
+
+\usepackage{fullpage}
+\usepackage{multicol,multirow}
+\usepackage{tabularx}
+\usepackage{ulem}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{minted}
+
+\usepackage{color} %% это для отображения цвета в коде
+\usepackage{listings} %% собственно, это и есть пакет listings
+
+\lstset{ %
+language=C,                 % выбор языка для подсветки (здесь это С)
+basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+numbers=left,               % где поставить нумерацию строк (слева\справа)
+%numberstyle=\tiny,           % размер шрифта для номеров строк
+stepnumber=1,                   % размер шага между двумя номерами строк
+numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+showspaces=false,            % показывать или нет пробелы специальными отступами
+showstringspaces=false,      % показывать или нет пробелы в строках
+showtabs=false,             % показывать или нет табуляцию в строках
+frame=single,              % рисовать рамку вокруг кода
+tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+breaklines=true,           % автоматически переносить строки (да\нет)
+breakatwhitespace=false, % переносить строки только если есть пробел
+escapeinside={\%*}{*)}   % если нужно добавить комментарии в коде
+}
+
+
+\begin{document}
+\begin{titlepage}
+\begin{center}
+\textbf{МИНИСТЕРСТВО ОБРАЗОВАНИЯ И НАУКИ РОССИЙСОЙ ФЕДЕРАЦИИ
+\medskip
+МОСКОВСКИЙ АВЦИАЦИОННЫЙ ИНСТИТУТ
+(НАЦИОНАЛЬНЫЙ ИССЛЕДОВАТЬЕЛЬСКИЙ УНИВЕРСТИТЕТ)
+\vfill\vfill
+{\Huge ЛАБОРАТОРНАЯ РАБОТА №8} \\
+по курсу объектно-ориентированное программирование
+I семестр, 2019/20 уч. год}
+\end{center}
+\vfill
+
+Студент \uline{\it {Попов Данила Андреевич, группа М8О-208Б-18}\hfill}
+
+Преподаватель \uline{\it {Журавлёв Андрей Андреевич}\hfill}
+
+\vfill
+\end{titlepage}
+
+\subsection*{Условие}
+
+Работа с ассинхронностью.
+
+Редактор должен соответствовать следующему функционалу:
+\begin{enumerate}
+\item размер буфера должен задаваться через командную строку
+\item результат обработки буфера должен выводиться на экран и в файл
+\item в программе должно быть два потока
+\item должен прослеживаться паттерн publish-subscribe
+\end{enumerate}
+
+\subsection*{Описание программы}
+
+Исходный код лежит в 12 файлах:
+\begin{enumerate}
+\item app/main.cpp
+\item include/async.hpp
+\item include/point.hpp
+\item include/polygon.hpp
+\item include/publisher.hpp
+\item include/serializable.hpp
+\item include/subscriber.hpp
+\item src/async.cpp
+\item src/publisher.cpp
+\item src/serializable.cpp
+\item src/subscriber.cpp
+\end{enumerate}
+
+\subsection*{Дневник отладки}
+
+Race condition при инициализации второго потока.
+
+\subsection*{Недочёты}
+
+На одну структуру приходится два вложенных shared_ptr (смотреть my_event).
+
+\subsection*{Выводы}
+
+Странная лабораторная работа с мультипоточностью, в которой одновременно может выполняться только один поток.
+
+\vfill
+
+\subsection*{Исходный код}
+
+{\Huge main.cpp}
+\inputminted
+    {C++}{app/main.cpp}
+    \pagebreak
+
+{\Huge include/async.hpp}
+\inputminted
+    {C++}{include/async.hpp}
+    \pagebreak
+
+{\Huge src/async.cpp}
+\inputminted
+    {C++}{src/async.cpp}
+    \pagebreak
+
+{\Huge include/point.hpp}
+\inputminted
+    {C++}{include/point.hpp}
+    \pagebreak
+
+{\Huge include/polygon.hpp}
+\inputminted
+    {C++}{include/polygon.hpp}
+    \pagebreak
+
+{\Huge include/publisher.hpp}
+\inputminted
+    {C++}{include/publisher.hpp}
+    \pagebreak
+
+{\Huge src/publisher.cpp}
+\inputminted
+    {C++}{src/publisher.pp}
+    \pagebreak
+
+{\Huge include/serializable.hpp}
+\inputminted
+    {C++}{include/serializable.hpp}
+    \pagebreak
+
+{\Huge src/serializable.cpp}
+\inputminted
+    {C++}{src/serializable.cpp}
+    \pagebreak
+
+{\Huge include/subscriber.hpp}
+\inputminted
+    {C++}{include/subscriber.hpp}
+    \pagebreak
+
+{\Huge src/subscriber.cpp}
+\inputminted
+    {C++}{src/subscriber.cpp}
+    \pagebreak
+    
+\end{document}
