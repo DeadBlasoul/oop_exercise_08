@@ -134,30 +134,37 @@ int main(const int argc, char* argv[]) {
             break;
         }
 
-        std::shared_ptr<oop::serializable> fig;
-        if (command == "rhombus") {
-            auto r = new rhombus;
-            read_rhombus(std::cin, *r);
-            fig.reset(r);
-        }
-        else if (command == "pentagon") {
-            fig.reset(new pentagon{ std::cin });
-        }
-        else if (command == "hexagon") {
-            fig.reset(new hexagon{ std::cin });
-        }
-        else if (command == "force") {
-            // Skip if statements
+        bool force = false;
+        if (command == "force") {
+            if (count == 0) {
+                std::cout << "Nothing to commit." << std::endl;
+                continue;
+            }
+            force = true;
         }
         else {
-            std::cout << "Unknown figure type or command." << std::endl;
-            continue;
+            std::shared_ptr<oop::serializable> fig;
+            if (command == "rhombus") {
+                auto r = new rhombus;
+                read_rhombus(std::cin, *r);
+                fig.reset(r);
+            }
+            else if (command == "pentagon") {
+                fig.reset(new pentagon{ std::cin });
+            }
+            else if (command == "hexagon") {
+                fig.reset(new hexagon{ std::cin });
+            }
+            else {
+                std::cout << "Unknown figure type or command." << std::endl;
+                continue;
+            }
+            std::shared_ptr<const oop::event> e{ new my_event(fig) };
+            publisher.push(e);
+            ++count;
         }
-        std::shared_ptr<const oop::event> e{ new my_event(fig) };
-        publisher.push(e);
-        ++count;
 
-        if (count == limit) {
+        if (count == limit || force) {
             fw.new_unique_file();
             publisher.commit();
             count = 0;
