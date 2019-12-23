@@ -35,8 +35,12 @@ struct unique_file_writer final
 
     unique_file_writer()
         : rng_(std::random_device{}())
-        , dist_(0, sizeof g_chars - 2)
-    {}
+        , dist_(0, sizeof g_chars - 2) {
+        const auto generator = [&]() {
+            return g_chars[dist_(rng_)];
+        };
+        std::generate_n(unique_.begin(), unique_string_len, generator);
+    }
 
     void new_unique_file() {
         if (file_.is_open()) {
@@ -50,26 +54,23 @@ struct unique_file_writer final
     }
 
 private:
+    static auto constexpr unique_string_len = 16;
+
     size_t                          file_counter_ = 0;
     std::ofstream                   file_;
     std::default_random_engine      rng_;
     std::uniform_int_distribution<> dist_;
+    std::string                     unique_;
 
-    std::string generate_unique_name() {
-        auto constexpr unique_string_len = 16;
-
+    [[nodiscard]] std::string generate_unique_name() const {
         const auto prefix    = "./out-";
         const auto suffix    = "-";
         const auto postfix   = ".txt";
         const auto ix        = std::to_string(file_counter_);
-        const auto generator = [&]() {
-            return g_chars[dist_(rng_)];
-        };
 
         std::string unique(unique_string_len, '\0');
-        std::generate_n(unique.begin(), unique_string_len, generator);
 
-        return prefix + unique + suffix + ix + postfix;
+        return prefix + unique_ + suffix + ix + postfix;
     }
 
     void handle(const oop::event& e) override {
